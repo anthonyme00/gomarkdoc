@@ -66,8 +66,7 @@ type commandOptions struct {
 	overrideImportPath    string
 }
 
-// Flags populated by goreleaser
-var version = ""
+var version = "v1.1.0"
 
 const configFilePrefix = ".gomarkdoc"
 
