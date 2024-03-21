@@ -2,7 +2,7 @@
 
 # generics
 
-	import "github.com/princjef/gomarkdoc/testData/generics"
+	import "github.com/anthonyme00/gomarkdoc/testData/generics"
 
 ## Index
 

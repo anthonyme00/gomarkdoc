@@ -2,7 +2,7 @@
 
 # tags
 
-	import "github.com/princjef/gomarkdoc/testData/tags"
+	import "github.com/anthonyme00/gomarkdoc/testData/tags"
 
 Package tags contains code to demonstrate usage of build tags.
 

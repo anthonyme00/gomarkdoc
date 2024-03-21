@@ -3,7 +3,7 @@
 # unexported
 
 ```go
-import "github.com/princjef/gomarkdoc/testData/unexported"
+import "github.com/anthonyme00/gomarkdoc/testData/unexported"
 ```
 
 Package unexported contains some simple code to exercise basic scenarios for documentation purposes.

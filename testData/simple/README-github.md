@@ -3,7 +3,7 @@
 # simple
 
 ```go
-import "github.com/princjef/gomarkdoc/testData/simple"
+import "github.com/anthonyme00/gomarkdoc/testData/simple"
 ```
 
 Package simple contains, some simple code to exercise basic scenarios for documentation purposes.

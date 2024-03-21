@@ -3,7 +3,7 @@
 # format
 
 ```go
-import "github.com/princjef/gomarkdoc/format"
+import "github.com/anthonyme00/gomarkdoc/format"
 ```
 
 Package format defines output formats for emitting documentation information.

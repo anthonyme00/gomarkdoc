@@ -3,7 +3,7 @@
 # lang
 
 ```go
-import "github.com/princjef/gomarkdoc/lang"
+import "github.com/anthonyme00/gomarkdoc/lang"
 ```
 
 Package lang provides constructs for defining golang language constructs and extracting information from them for documentation purposes.

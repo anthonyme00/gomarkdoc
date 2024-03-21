@@ -3,7 +3,7 @@
 # function
 
 ```go
-import "github.com/princjef/gomarkdoc/testData/lang/function"
+import "github.com/anthonyme00/gomarkdoc/testData/lang/function"
 ```
 
 ## Index
@@ -69,7 +69,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/princjef/gomarkdoc/testData/lang/function"
+	"github.com/anthonyme00/gomarkdoc/testData/lang/function"
 )
 
 func main() {
@@ -99,7 +99,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/princjef/gomarkdoc/testData/lang/function"
+	"github.com/anthonyme00/gomarkdoc/testData/lang/function"
 )
 
 func main() {
@@ -144,7 +144,7 @@ WithGenericReceiver has a receiver with a generic type.
 package main
 
 import (
-	"github.com/princjef/gomarkdoc/testData/lang/function"
+	"github.com/anthonyme00/gomarkdoc/testData/lang/function"
 )
 
 func main() {
@@ -176,7 +176,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/princjef/gomarkdoc/testData/lang/function"
+	"github.com/anthonyme00/gomarkdoc/testData/lang/function"
 )
 
 func main() {
@@ -199,7 +199,7 @@ func main() {
 package main
 
 import (
-	"github.com/princjef/gomarkdoc/testData/lang/function"
+	"github.com/anthonyme00/gomarkdoc/testData/lang/function"
 )
 
 func main() {

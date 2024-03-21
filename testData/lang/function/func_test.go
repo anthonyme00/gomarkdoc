@@ -3,7 +3,7 @@ package function_test
 import (
 	"fmt"
 
-	"github.com/princjef/gomarkdoc/testData/lang/function"
+	"github.com/anthonyme00/gomarkdoc/testData/lang/function"
 )
 
 func ExampleStandalone() {

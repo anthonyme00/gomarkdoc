@@ -6,7 +6,7 @@ This is content before the embed
 
 # embed
 
-	import "github.com/princjef/gomarkdoc/testData/embed"
+	import "github.com/anthonyme00/gomarkdoc/testData/embed"
 
 Package embed tests out embedding of documentation in an existing readme.
 
@@ -35,7 +35,7 @@ This is content after the embed
 
 # embed
 
-	import "github.com/princjef/gomarkdoc/testData/embed"
+	import "github.com/anthonyme00/gomarkdoc/testData/embed"
 
 Package embed tests out embedding of documentation in an existing readme.
 
@@ -64,7 +64,7 @@ This is content after the second embed
 
 # embed
 
-	import "github.com/princjef/gomarkdoc/testData/embed"
+	import "github.com/anthonyme00/gomarkdoc/testData/embed"
 
 Package embed tests out embedding of documentation in an existing readme.
 

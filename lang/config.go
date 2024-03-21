@@ -15,23 +15,25 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/anthonyme00/gomarkdoc/logger"
 	"github.com/go-git/go-git/v5"
-	"github.com/princjef/gomarkdoc/logger"
 )
 
 type (
 	// Config defines contextual information used to resolve documentation for
 	// a construct.
 	Config struct {
-		FileSet *token.FileSet
-		Files   []*ast.File
-		Level   int
-		Repo    *Repo
-		PkgDir  string
-		WorkDir string
-		Symbols map[string]Symbol
-		Pkg     *doc.Package
-		Log     logger.Logger
+		FileSet        *token.FileSet
+		Files          []*ast.File
+		Level          int
+		Repo           *Repo
+		PkgDir         string
+		WorkDir        string
+		Symbols        map[string]Symbol
+		Pkg            *doc.Package
+		Log            logger.Logger
+		FileFilter     *string
+		OverrideImport *string
 	}
 
 	// Repo represents information about a repository relevant to documentation
@@ -155,6 +157,20 @@ func ConfigWithRepoOverrides(overrides *Repo) ConfigOption {
 		}
 
 		c.Repo = overrides
+		return nil
+	}
+}
+
+func ConfigWithFileFilter(fileFilter *string) ConfigOption {
+	return func(c *Config) error {
+		c.FileFilter = fileFilter
+		return nil
+	}
+}
+
+func ConfigWithOverrideImport(importPath *string) ConfigOption {
+	return func(c *Config) error {
+		c.OverrideImport = importPath
 		return nil
 	}
 }

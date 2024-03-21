@@ -12,6 +12,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"path"
 	"path/filepath"
 	"runtime/debug"
 	"strings"
@@ -19,10 +20,10 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/princjef/gomarkdoc"
-	"github.com/princjef/gomarkdoc/format"
-	"github.com/princjef/gomarkdoc/lang"
-	"github.com/princjef/gomarkdoc/logger"
+	"github.com/anthonyme00/gomarkdoc"
+	"github.com/anthonyme00/gomarkdoc/format"
+	"github.com/anthonyme00/gomarkdoc/lang"
+	"github.com/anthonyme00/gomarkdoc/logger"
 )
 
 // PackageSpec defines the data available to the --output option's template.
@@ -60,6 +61,9 @@ type commandOptions struct {
 	check                 bool
 	embed                 bool
 	version               bool
+	fileOnly              bool
+	file                  string
+	overrideImportPath    string
 }
 
 // Flags populated by goreleaser
@@ -101,9 +105,32 @@ func buildCommand() *cobra.Command {
 			opts.repository.Remote = viper.GetString("repository.url")
 			opts.repository.DefaultBranch = viper.GetString("repository.defaultBranch")
 			opts.repository.PathFromRoot = viper.GetString("repository.path")
+			opts.fileOnly = viper.GetBool("fileOnly")
+			opts.overrideImportPath = viper.GetString("overrideImportPath")
 
 			if opts.check && opts.output == "" {
 				return errors.New("gomarkdoc: check mode cannot be run without an output set")
+			}
+
+			if opts.fileOnly {
+				if len(args) == 0 {
+					return errors.New("gomarkdoc: if file-only flag is set, then a valid file must be passed")
+				} else if len(args) > 1 {
+					return errors.New("gomarkdoc: if file-only flag is set, then only one file can be passed")
+				} else if path.Ext(args[0]) != ".go" {
+					return errors.New("gomarkdoc: if file-only flag is set, then the file passed must be a go file")
+				}
+
+				filePath := args[0]
+				if !filepath.IsAbs(filePath) {
+					var err error
+					filePath, err = filepath.Abs(filePath)
+					if err != nil {
+						return fmt.Errorf("gomarkdoc: failed to get absolute path for file: %w", err)
+					}
+				}
+
+				opts.file = filePath
 			}
 
 			if len(args) == 0 {
@@ -114,7 +141,6 @@ func buildCommand() *cobra.Command {
 			return runCommand(args, opts)
 		},
 	}
-
 	command.Flags().StringVar(
 		&configFile,
 		"config",
@@ -235,6 +261,18 @@ func buildCommand() *cobra.Command {
 		false,
 		"Print the version.",
 	)
+	command.Flags().BoolVar(
+		&opts.fileOnly,
+		"file-only",
+		false,
+		"Only includes definition inside the defined files",
+	)
+	command.Flags().StringVar(
+		&opts.overrideImportPath,
+		"override-import-path",
+		"",
+		"Override the import path of the package. This is useful when the package is not in the GOPATH.",
+	)
 
 	// We ignore the errors here because they only happen if the specified flag doesn't exist
 	_ = viper.BindPFlag("includeUnexported", command.Flags().Lookup("include-unexported"))
@@ -253,6 +291,8 @@ func buildCommand() *cobra.Command {
 	_ = viper.BindPFlag("repository.url", command.Flags().Lookup("repository.url"))
 	_ = viper.BindPFlag("repository.defaultBranch", command.Flags().Lookup("repository.default-branch"))
 	_ = viper.BindPFlag("repository.path", command.Flags().Lookup("repository.path"))
+	_ = viper.BindPFlag("fileOnly", command.Flags().Lookup("file-only"))
+	_ = viper.BindPFlag("overrideImportPath", command.Flags().Lookup("override-import-path"))
 
 	return command
 }
@@ -435,6 +475,14 @@ func loadPackages(specs []*PackageSpec, opts commandOptions) error {
 
 		if opts.includeUnexported {
 			pkgOpts = append(pkgOpts, lang.PackageWithUnexportedIncluded())
+		}
+
+		if opts.fileOnly {
+			pkgOpts = append(pkgOpts, lang.PackageWithFileFilter(opts.file))
+		}
+
+		if opts.overrideImportPath != "" {
+			pkgOpts = append(pkgOpts, lang.PackageWithOverrideImport(opts.overrideImportPath))
 		}
 
 		pkg, err := lang.NewPackageFromBuild(log, buildPkg, pkgOpts...)

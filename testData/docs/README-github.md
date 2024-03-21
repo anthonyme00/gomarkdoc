@@ -3,7 +3,7 @@
 # docs
 
 ```go
-import "github.com/princjef/gomarkdoc/testData/docs"
+import "github.com/anthonyme00/gomarkdoc/testData/docs"
 ```
 
 Package docs exercises the documentation features of golang 1.19 and above at the package documentation level.

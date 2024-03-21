@@ -240,9 +240,9 @@
 //		"fmt"
 //		"os"
 //
-//		"github.com/princjef/gomarkdoc"
-//		"github.com/princjef/gomarkdoc/lang"
-//		"github.com/princjef/gomarkdoc/logger"
+//		"github.com/anthonyme00/gomarkdoc"
+//		"github.com/anthonyme00/gomarkdoc/lang"
+//		"github.com/anthonyme00/gomarkdoc/logger"
 //	)
 //
 //	func main() {

@@ -2,7 +2,7 @@
 
 # untagged
 
-	import "github.com/princjef/gomarkdoc/testData/untagged"
+	import "github.com/anthonyme00/gomarkdoc/testData/untagged"
 
 Package untagged contains code to demonstrate usage of build tags.
 

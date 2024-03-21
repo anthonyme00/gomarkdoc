@@ -6,8 +6,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/princjef/gomarkdoc/format/formatcore"
-	"github.com/princjef/gomarkdoc/lang"
+	"github.com/anthonyme00/gomarkdoc/format/formatcore"
+	"github.com/anthonyme00/gomarkdoc/lang"
 )
 
 // GitHubFlavoredMarkdown provides a Format which is compatible with GitHub

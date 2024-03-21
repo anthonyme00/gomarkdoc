@@ -5,9 +5,9 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/anthonyme00/gomarkdoc/format"
+	"github.com/anthonyme00/gomarkdoc/lang"
 	"github.com/matryer/is"
-	"github.com/princjef/gomarkdoc/format"
-	"github.com/princjef/gomarkdoc/lang"
 )
 
 func TestPlainMarkdown_Bold(t *testing.T) {

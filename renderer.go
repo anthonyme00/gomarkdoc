@@ -6,8 +6,8 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/princjef/gomarkdoc/format"
-	"github.com/princjef/gomarkdoc/lang"
+	"github.com/anthonyme00/gomarkdoc/format"
+	"github.com/anthonyme00/gomarkdoc/lang"
 )
 
 type (
@@ -18,6 +18,7 @@ type (
 		tmpl              *template.Template
 		format            format.Format
 		templateFuncs     map[string]any
+		onlyFile          *string
 	}
 
 	// RendererOption configures the renderer's behavior.

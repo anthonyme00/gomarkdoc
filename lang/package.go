@@ -14,7 +14,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/princjef/gomarkdoc/logger"
+	"github.com/anthonyme00/gomarkdoc/logger"
 )
 
 type (
@@ -30,6 +30,8 @@ type (
 	// and its documentation on creation.
 	PackageOptions struct {
 		includeUnexported   bool
+		filterOutFile       *string
+		overrideImportPath  *string
 		repositoryOverrides *Repo
 	}
 
@@ -61,7 +63,11 @@ func NewPackageFromBuild(log logger.Logger, pkg *build.Package, opts ...PackageO
 		return nil, err
 	}
 
-	cfg, err := NewConfig(log, wd, pkg.Dir, ConfigWithRepoOverrides(options.repositoryOverrides))
+	cfg, err := NewConfig(log, wd, pkg.Dir,
+		ConfigWithRepoOverrides(options.repositoryOverrides),
+		ConfigWithFileFilter(options.filterOutFile),
+		ConfigWithOverrideImport(options.overrideImportPath),
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -99,6 +105,23 @@ func PackageWithRepositoryOverrides(repo *Repo) PackageOption {
 	}
 }
 
+// PackageWithFileFilter can be used along with the NewPackageFromBuild function
+// to specify that only symbols from a specific file should be included in the
+// documentation for the package.
+func PackageWithFileFilter(file string) PackageOption {
+	return func(opts *PackageOptions) error {
+		opts.filterOutFile = &file
+		return nil
+	}
+}
+
+func PackageWithOverrideImport(importPath string) PackageOption {
+	return func(opts *PackageOptions) error {
+		opts.overrideImportPath = &importPath
+		return nil
+	}
+}
+
 // Level provides the default level that headers for the package's root
 // documentation should be rendered.
 func (pkg *Package) Level() int {
@@ -127,6 +150,10 @@ func (pkg *Package) Name() string {
 // from a local path and does not use Go Modules, this will typically print
 // `import "."`.
 func (pkg *Package) Import() string {
+	if pkg.cfg.OverrideImport != nil {
+		return fmt.Sprintf(`import "%s"`, *pkg.cfg.OverrideImport)
+	}
+
 	return fmt.Sprintf(`import "%s"`, pkg.doc.ImportPath)
 }
 
@@ -134,6 +161,10 @@ func (pkg *Package) Import() string {
 // importing the package. If your package's documentation is generated from a
 // local path and does not use Go Modules, this will typically print `.`.
 func (pkg *Package) ImportPath() string {
+	if pkg.cfg.OverrideImport != nil {
+		return *pkg.cfg.OverrideImport
+	}
+
 	return pkg.doc.ImportPath
 }
 
@@ -146,14 +177,29 @@ func (pkg *Package) Summary() string {
 // Doc provides the structured contents of the documentation comment for the
 // package.
 func (pkg *Package) Doc() *Doc {
+	val := NewDoc(pkg.cfg.Inc(2), pkg.doc.Doc)
+	if pkg.cfg.FileFilter != nil {
+		if path.Base(*pkg.cfg.FileFilter) != "doc.go" {
+			val.blocks = []*Block{}
+		}
+	}
 	// TODO: level should only be + 1, but we have special knowledge for rendering
-	return NewDoc(pkg.cfg.Inc(2), pkg.doc.Doc)
+	return val
 }
 
 // Consts lists the top-level constants provided by the package.
 func (pkg *Package) Consts() (consts []*Value) {
 	for _, c := range pkg.doc.Consts {
-		consts = append(consts, NewValue(pkg.cfg.Inc(1), c))
+		val := NewValue(pkg.cfg.Inc(1), c)
+
+		if pkg.cfg.FileFilter != nil {
+			valPath := val.Location().Filepath
+			if *pkg.cfg.FileFilter != valPath {
+				continue
+			}
+		}
+
+		consts = append(consts, val)
 	}
 
 	return
@@ -162,7 +208,16 @@ func (pkg *Package) Consts() (consts []*Value) {
 // Vars lists the top-level variables provided by the package.
 func (pkg *Package) Vars() (vars []*Value) {
 	for _, v := range pkg.doc.Vars {
-		vars = append(vars, NewValue(pkg.cfg.Inc(1), v))
+		val := NewValue(pkg.cfg.Inc(1), v)
+
+		if pkg.cfg.FileFilter != nil {
+			valPath := val.Location().Filepath
+			if *pkg.cfg.FileFilter != valPath {
+				continue
+			}
+		}
+
+		vars = append(vars, val)
 	}
 
 	return
@@ -171,7 +226,16 @@ func (pkg *Package) Vars() (vars []*Value) {
 // Funcs lists the top-level functions provided by the package.
 func (pkg *Package) Funcs() (funcs []*Func) {
 	for _, fn := range pkg.doc.Funcs {
-		funcs = append(funcs, NewFunc(pkg.cfg.Inc(1), fn, pkg.examples))
+		val := NewFunc(pkg.cfg.Inc(1), fn, pkg.examples)
+
+		if pkg.cfg.FileFilter != nil {
+			valPath := val.Location().Filepath
+			if *pkg.cfg.FileFilter != valPath {
+				continue
+			}
+		}
+
+		funcs = append(funcs, val)
 	}
 
 	return
@@ -180,7 +244,16 @@ func (pkg *Package) Funcs() (funcs []*Func) {
 // Types lists the top-level types provided by the package.
 func (pkg *Package) Types() (types []*Type) {
 	for _, typ := range pkg.doc.Types {
-		types = append(types, NewType(pkg.cfg.Inc(1), typ, pkg.examples))
+		val := NewType(pkg.cfg.Inc(1), typ, pkg.examples)
+
+		if pkg.cfg.FileFilter != nil {
+			valPath := val.Location().Filepath
+			if *pkg.cfg.FileFilter != valPath {
+				continue
+			}
+		}
+
+		types = append(types, val)
 	}
 
 	return
@@ -202,7 +275,15 @@ func (pkg *Package) Examples() (examples []*Example) {
 			continue
 		}
 
-		examples = append(examples, NewExample(pkg.cfg.Inc(1), name, example))
+		val := NewExample(pkg.cfg.Inc(1), name, example)
+
+		if pkg.cfg.FileFilter != nil {
+			if path.Base(*pkg.cfg.FileFilter) != "doc.go" {
+				continue
+			}
+		}
+
+		examples = append(examples, val)
 	}
 
 	return

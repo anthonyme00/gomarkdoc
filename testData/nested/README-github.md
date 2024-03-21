@@ -3,7 +3,7 @@
 # nested
 
 ```go
-import "github.com/princjef/gomarkdoc/testData/nested"
+import "github.com/anthonyme00/gomarkdoc/testData/nested"
 ```
 
 ## Index

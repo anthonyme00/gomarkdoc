@@ -1,4 +1,5 @@
-module github.com/princjef/gomarkdoc
+module github.com/anthonyme00/gomarkdoc
+
 
 go 1.18
 

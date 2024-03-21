@@ -3,7 +3,7 @@
 # formatcore
 
 ```go
-import "github.com/princjef/gomarkdoc/format/formatcore"
+import "github.com/anthonyme00/gomarkdoc/format/formatcore"
 ```
 
 Package formatcore provides utilities for creating formatters like those found in the format package.

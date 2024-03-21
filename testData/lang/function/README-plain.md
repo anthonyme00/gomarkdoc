@@ -2,7 +2,7 @@
 
 # function
 
-	import "github.com/princjef/gomarkdoc/testData/lang/function"
+	import "github.com/anthonyme00/gomarkdoc/testData/lang/function"
 
 ## Index
 
@@ -58,7 +58,7 @@ This section contains a code block.
 	import (
 		"fmt"
 	
-		"github.com/princjef/gomarkdoc/testData/lang/function"
+		"github.com/anthonyme00/gomarkdoc/testData/lang/function"
 	)
 	
 	func main() {
@@ -86,7 +86,7 @@ This section contains a code block.
 	import (
 		"fmt"
 	
-		"github.com/princjef/gomarkdoc/testData/lang/function"
+		"github.com/anthonyme00/gomarkdoc/testData/lang/function"
 	)
 	
 	func main() {
@@ -125,7 +125,7 @@ WithGenericReceiver has a receiver with a generic type.
 	package main
 	
 	import (
-		"github.com/princjef/gomarkdoc/testData/lang/function"
+		"github.com/anthonyme00/gomarkdoc/testData/lang/function"
 	)
 	
 	func main() {
@@ -154,7 +154,7 @@ Receiver is a type used to demonstrate functions with receivers.
 	import (
 		"fmt"
 	
-		"github.com/princjef/gomarkdoc/testData/lang/function"
+		"github.com/anthonyme00/gomarkdoc/testData/lang/function"
 	)
 	
 	func main() {
@@ -176,7 +176,7 @@ Receiver is a type used to demonstrate functions with receivers.
 	package main
 	
 	import (
-		"github.com/princjef/gomarkdoc/testData/lang/function"
+		"github.com/anthonyme00/gomarkdoc/testData/lang/function"
 	)
 	
 	func main() {
